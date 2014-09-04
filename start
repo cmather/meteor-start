@@ -25,8 +25,8 @@ display_help() {
 
   Options:
     --help             Display help
-    --env <env>        Set the environment (development, test, production)
     --checkout         Use a Meteor git checkout
+    --env <env>        Set the environment (development, test, production)
     --packages <path>  Tell Meteor about another packages folder
 
 
