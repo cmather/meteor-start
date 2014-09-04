@@ -6,7 +6,7 @@
 
 APP="app"
 CONFIG="config"
-BUNDLE="bundle"
+BUNDLE="build/bundle"
 
 if [ -z "$METEOR_SRC" ]; then
   METEOR_SRC="$HOME/src/meteor"
@@ -27,6 +27,9 @@ display_help() {
     --help             Display help
     --env <env>        Set the environment (development, test, production)
     --checkout         Use a Meteor git checkout
+    --packages <path>  Tell Meteor about another packages folder
+
+
 EOF
   exit 0
 }
@@ -90,6 +93,7 @@ else
       -h|--help|help)       display_help ;;
       -e|--env)             export NODE_ENV="$2"; shift ;;
       --checkout)           CHECKOUT=true ;;
+      --packages)           export PACKAGE_DIRS="$2:$PACKAGE_DIRS"; shift ;;
       *)                    display_help ;;
     esac
     shift
