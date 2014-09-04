@@ -5,7 +5,9 @@ A simple utility for running your Meteor applications in different environments.
 Just include the start script in the root of your project. Make sure the start
 file has excutable privileges.
 
-`$ chmod +x start`
+```
+$ chmod +x start
+```
 
 ### Project Structure
 
