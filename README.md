@@ -5,7 +5,9 @@ A simple utility for running your Meteor applications in different environments.
 Just include the start script in the root of your project. Make sure the start
 file has excutable privileges.
 
-`$ chmod +x start`
+```
+$ chmod +x start
+```
 
 ### Project Structure
 
@@ -26,14 +28,20 @@ goes in the root project folder.**
 
 ### Usage
 
-`start`
+```
+$ start
+```
 Start your application in development, automatically executing the
 config/development/env.sh file and loading config/development/settings.json into
 Meteor.settings.
 
-`start --env production`
+```
+$ start --env production
+```
 Run the application in production mode.
 
-`start --checkout`
+```
+$ start --checkout`
+```
 Run the application using a git checkout of meteor source code. Requires the
 METEOR_SRC environment variable to be set.
