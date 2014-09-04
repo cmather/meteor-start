@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+#
+# Global variables.
+#
+
+APP="app"
+CONFIG="config"
+BUNDLE="bundle"
+
+if [ -z "$METEOR_SRC" ]; then
+  METEOR_SRC="$HOME/src/meteor"
+fi
+
+#
+# Help and usage info.
+#
+
+display_help() {
+  cat <<-EOF
+
+  A utility for running your Meteor applications.
+
+  Usage: start [options]
+
+  Options:
+    --help             Display help
+    --env <env>        Set the environment (development, test, production)
+    --checkout         Use a Meteor git checkout
+EOF
+  exit 0
+}
+
+#
+# Start your application.
+#
+
+start() {
+  if [ -z "$NODE_ENV" ]; then
+    NODE_ENV="development"
+  fi
+
+  local env_file="$CONFIG/$NODE_ENV/env.sh";
+  local settings_file="$CONFIG/$NODE_ENV/settings.json";
+
+  if [ -f "$env_file" ]; then source "$env_file"; fi
+
+  if [ -f "$settings_file" ]; then
+    export METEOR_SETTINGS="$(cat $settings_file)"
+  fi
+
+  if [ "$CHECKOUT" ]; then
+
+    if [ ! -d "$METEOR_SRC" ]; then
+      echo "Error: To run from a git checkout of meteor, please set the METEOR_SRC env variable to a valid meteor source folder."
+      exit 1;
+    fi
+
+    echo "Using a Meteor git checkout."
+    METEOR="$METEOR_SRC/meteor"
+  else
+    METEOR="meteor"
+  fi
+
+
+  if [ "$NODE_ENV" == "production" ]; then
+    cd "$BUNDLE"
+    echo "Installing server npm packages..."
+    (cd programs/server && npm install)
+    echo "Starting your app in $NODE_ENV on port $PORT"
+    node main.js
+  else
+    cd "$APP"
+    echo "Starting your app in $NODE_ENV."
+    local CMD="$METEOR --settings ../$SETTINGS_FILE"
+    echo "$CMD"
+    eval $CMD
+  fi
+}
+
+#
+# Handle arguments.
+#
+
+if [ $# -eq 0 ]; then
+  start
+else
+  while [ $# -ne 0 ]; do
+    case $1 in
+      -h|--help|help)       display_help ;;
+      -e|--env)             export NODE_ENV="$2"; shift ;;
+      --checkout)           CHECKOUT=true ;;
+      *)                    display_help ;;
+    esac
+    shift
+  done
+
+  start $1
+fi
