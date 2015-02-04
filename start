@@ -74,8 +74,13 @@ start() {
     node main.js
   else
     cd "$APP"
-    echo "Starting your app in $NODE_ENV."
-    local CMD="$METEOR --settings ../$settings_file"
+    if [ "$PORT" ]; then
+      echo "Starting your app in $NODE_ENV on port $PORT"
+      local CMD="$METEOR  --port $PORT --settings ../$settings_file"
+    else
+      echo "Starting your app in $NODE_ENV"
+      local CMD="$METEOR  --settings ../$settings_file"
+    fi
     echo "$CMD"
     eval $CMD
   fi
